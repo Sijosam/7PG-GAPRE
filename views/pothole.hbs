@@ -1,0 +1,24 @@
+{{> header}}
+
+
+   <h1>PotHole Alert Page</h1>
+
+   <ul>
+
+ {{#each p_report}}
+
+   <li><p>Reported User ID : {{this.userID}} </p></li>
+   <p>Reported Date:{{this.date}}</p>
+   <p> {{this.name}} </p>
+   <img src="{{this.image}}" alt="">
+   <p>location in lat & lng : {{this.location.lat}},{{this.location.lng}}</p>
+   <p>Description : {{this.description}}</p>
+   <form action = "/potholes/{{ this._id}}" method = "POST">
+   <button>DELETE</button>
+   </form>
+   <hr>
+ {{/each}}
+</ul>
+
+
+{{> footer}}

@@ -1,0 +1,59 @@
+{{> header}}
+
+
+    <div >
+        Report A New PlotHole || Garbage
+    </div>
+
+
+
+
+<hr>
+    <form  action="/report" method = "POST">
+
+      <div>
+           <label> UserId</label>
+           <input type = "text" name="report[userID]" placeholder="UserID">
+       </div>
+
+
+
+<hr>
+      <select name="report[type]">
+           <option value="P">PlotHole</option>
+           <option value="G">Garbage</option>
+     </select>
+<hr>
+         <div>
+              <label> Place</label>
+              <input type = "text" name="report[place]" placeholder="place">
+          </div>
+<hr>
+          <div>
+              <label> Image</label>
+              <input type = "text" name="report[image]" placeholder="Image url">
+          </div>
+<hr>
+          <div>
+              <label>description</label>
+              <textarea name="report[description]"></textarea>
+          </div>
+<hr>
+        <button>SUBMIT</button>
+
+
+
+    </form>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{> footer}}
