@@ -14,9 +14,13 @@ app.use(function(req, res, next) {
 });
 
 
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'hbs');
+
+
+
 
 var mongoose = require('mongoose');
 
@@ -43,7 +47,11 @@ var reportSchema = new mongoose.Schema({
 
 var Report = mongoose.model("Report", reportSchema);
 
+hbs.registerHelper('getdate', (date) => {
 
+    return moment(date).format('LLLL');
+
+});
 
 
 
