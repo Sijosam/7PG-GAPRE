@@ -7,6 +7,13 @@ const moment = require('moment');
 var {ObjectID} = require('mongodb');
 var app = express();
 
+app.use(function(req, res, next) {
+ res.header("Access-Control-Allow-Origin", "*");
+ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+ next();
+});
+
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'hbs');
@@ -21,7 +28,7 @@ mongoose.connect('mongodb://localhost:27017/7PG');
 var reportSchema = new mongoose.Schema({
    userID:String,
    type:String,
-   name: String,
+   place: String,
    image: String,
    description: String,
    location:{
@@ -30,7 +37,7 @@ var reportSchema = new mongoose.Schema({
    },
     date    : {
       type:Date,
-      default: Date.now
+      default:Date.now
     }
 });
 
@@ -137,6 +144,18 @@ app.post("/garbage/:id", (req, res) => {
           res.render("welcome");
       }
    });
+});
+
+//Sending listens to the FrontEnd code
+app.get('/garbage/get', (req,res) => {
+  Report.find({'type':'G'}, (err,gReport) => {
+    if(err){
+      console.log("Errorr");
+    }else {
+
+      res.send({g_report:gReport});
+    }
+  });
 });
 
 
