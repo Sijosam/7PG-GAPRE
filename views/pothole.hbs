@@ -13,6 +13,9 @@
    <img src="{{this.image}}" alt="">
    <p>location in lat & lng : {{this.location.lat}},{{this.location.lng}}</p>
    <p>Description : {{this.description}}</p>
+   <form action = "/edit/{{ this._id}}" method = "GET">
+   <button>Edit</button>
+   </form>
    <form action = "/potholes/{{ this._id}}" method = "POST">
    <button>DELETE</button>
    </form>

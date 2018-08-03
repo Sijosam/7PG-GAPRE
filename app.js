@@ -45,28 +45,6 @@ var Report = mongoose.model("Report", reportSchema);
 
 
 
-  // Report.create(
-  //    {
-  //        userID: '1PID',
-  //        type:'G',
-  //        name: "Pipeline",
-  //        image: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201506/croc-story_647_061915020003.jpg",
-  //        description: "Extremly dangerous for Env",
-  //        date:  new Date().toString(),
-  //        location:{
-  //          lat:1.232434534,
-  //          lng:.08797657547
-  //        }
-  //     },(err,report) => {
-  //       if(err){
-  //         console.log(err)
-  //       }else{
-  //         console.log("Reporting Has Been completed");
-  //       }
-  //     }
-  //   );
-
-
 
 
 // mAIN Page
@@ -108,12 +86,46 @@ app.get('/potholes', (req,res) => {
     if(err){
       console.log("Errorr");
     }else {
-        //var date = moment(pReport.date).format('LLLL');
       res.render("pothole",{p_report:pReport});
-    }
+      }
   });
 });
 
+
+//EDIT ROUTE
+
+app.get("/edit/:id", (req,res) => {
+    Report.findById(req.params.id, function(err, found){
+       if(err)
+            {
+            res.render("welcome");
+            }
+            else
+            {
+            res.render("edit", {found : found});
+            }
+    });
+
+});
+
+//update
+app.post("/edit/:id", (req,res) => {
+
+      Report.findByIdAndUpdate(req.params.id,req.body.report, function(err, updatedBlog){
+       if(err)
+            {
+            res.render("new");
+            }
+            else
+            {
+            res.render("welcome");
+            }
+      });
+});
+
+
+
+//Delete PotHoles
 app.post("/potholes/:id", (req, res) => {
    Report.findByIdAndRemove(req.params.id, function(err){
       if(err){
@@ -123,6 +135,9 @@ app.post("/potholes/:id", (req, res) => {
       }
    });
 });
+
+
+
 
 //Show garbage Page
 app.get('/garbage', (req,res) => {
@@ -135,9 +150,10 @@ app.get('/garbage', (req,res) => {
     }
   });
 });
+
 //Delete
 app.post("/garbage/:id", (req, res) => {
-   Report.findByIdAndRemove(req.params.id, (err) => {
+   Report.findByIdAndUpdate(req.params.id, (err) => {
       if(err){
           res.redirect("potholes");
       } else {
@@ -145,6 +161,9 @@ app.post("/garbage/:id", (req, res) => {
       }
    });
 });
+
+
+
 
 //Sending listens to the FrontEnd code
 app.get('/garbage/get', (req,res) => {

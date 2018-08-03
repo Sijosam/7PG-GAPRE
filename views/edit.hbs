@@ -1,0 +1,42 @@
+{{> header}}
+<!-- <hr> -->
+    <form  action="/edit/{{found._id}}" method = "POST">
+
+      <!-- <div>
+           <label> UserId</label>
+           <input type = "text" name="report[userID]" placeholder="{{found.userID}}">
+       </div> -->
+
+          <p> <h3>  Edit UserID : {{found.userID}} & type {{found.type}}</h3>  </p>
+
+<!-- <hr>
+      <select name="report[type]">
+           <option value="P">PlotHole</option>
+           <option value="G">Garbage</option>
+     </select> -->
+<hr>
+         <div>
+              <label> Place</label>
+              <input type = "text" name="report[place]" value="{{found.place}} ">
+          </div>
+<hr>
+          <div>
+              <label> Image</label>
+              <input type = "text" name="report[image]" value="{{found.image}}">
+          </div>
+<hr>
+          <div>
+              <label>description</label>
+              <textarea name="report[description]">{{found.description}}</textarea>
+          </div>
+<hr>
+        <button>SUBMIT</button>
+
+
+
+    </form>
+
+
+</div>
+
+{{> footer}}
