@@ -5,7 +5,7 @@
 
    <ul>
 
- {{#each p_report}}
+ {{#each report}}
 
    <li><p>Reported User ID : {{this.userID}} </p></li>
    <p>Reported Date:{{getdate this.date}}</p>
@@ -16,7 +16,7 @@
    <form action = "/edit/{{ this._id}}" method = "GET">
    <button>Edit</button>
    </form>
-   <form action = "/potholes/{{ this._id}}" method = "POST">
+    <form action = "/del/{{this.type}}/{{this._id}}" method = "POST">
    <button>DELETE</button>
    </form>
    <hr>

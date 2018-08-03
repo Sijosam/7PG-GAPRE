@@ -58,7 +58,7 @@ hbs.registerHelper('getdate', (date) => {
 // mAIN Page
 app.get('/', (req,res) => {
 
-        res.render("welcome");
+  res.render("welcome");
 });
 
 //Rendering new template
@@ -82,20 +82,18 @@ app.post("/report", (req,res) => {
     });
 });
 
-
-
-
-
-
-
 //show PotHoles Page
-app.get('/potholes', (req,res) => {
-  Report.find({'type' : "P"}, (err,pReport) => {
-    if(err){
-      console.log("Errorr");
-    }else {
-      res.render("pothole",{p_report:pReport});
-      }
+app.get('/type/:type', (req,res) => {
+  var type = req.params.type;
+  Report.find({'type' : type}, (err,Report) => {
+    if(type === 'P'){
+        res.render("pothole",{report:Report});
+    }
+    else if(type === 'G'){
+      res.render("garbage",{report:Report});
+    }else{
+        res.status(404).send("Error");
+    }
   });
 });
 
@@ -113,7 +111,6 @@ app.get("/edit/:id", (req,res) => {
             res.render("edit", {found : found});
             }
     });
-
 });
 
 //update
@@ -129,44 +126,22 @@ app.post("/edit/:id", (req,res) => {
             res.render("welcome");
             }
       });
-});
+    });
 
 
 
 //Delete PotHoles
-app.post("/potholes/:id", (req, res) => {
+app.post("/del/:type/:id", (req, res) => {
    Report.findByIdAndRemove(req.params.id, function(err){
-      if(err){
-          res.redirect("potholes");
-      } else {
-          res.render("welcome");
-      }
-   });
-});
-
-
-
-
-//Show garbage Page
-app.get('/garbage', (req,res) => {
-  Report.find({'type':'G'}, (err,gReport) => {
-    if(err){
-      console.log("Errorr");
-    }else {
-
-      res.render("garbage",{g_report:gReport});
-    }
-  });
-});
-
-//Delete
-app.post("/garbage/:id", (req, res) => {
-   Report.findByIdAndUpdate(req.params.id, (err) => {
-      if(err){
-          res.redirect("potholes");
-      } else {
-          res.render("welcome");
-      }
+    var type = req.params.type;
+     if(type === 'P'){
+         res.render("pothole");
+     }
+     else if(type === 'G'){
+       res.render("garbage");
+     }else{
+         res.status(404).send("Error");
+     }
    });
 });
 
