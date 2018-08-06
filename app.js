@@ -4,6 +4,7 @@ const hbs = require('hbs');
 const moment = require('moment');
 
 
+
 var {ObjectID} = require('mongodb');
 var app = express();
 
@@ -23,29 +24,12 @@ app.set('view engine', 'hbs');
 
 
 var mongoose = require('mongoose');
+var Report = require('./models/report.js');
 
 mongoose.Promise = global.Promise;
 
 mongoose.connect('mongodb://localhost:27017/7PG');
 
-// SCHEMA SETUP
-var reportSchema = new mongoose.Schema({
-   userID:String,
-   type:String,
-   place: String,
-   image: String,
-   description: String,
-   location:{
-     lat:Number,
-     lng:Number
-   },
-    date    : {
-      type:Date,
-      default:Date.now
-    }
-});
-
-var Report = mongoose.model("Report", reportSchema);
 
 hbs.registerHelper('getdate', (date) => {
 
@@ -54,11 +38,21 @@ hbs.registerHelper('getdate', (date) => {
 });
 
 
+hbs.registerHelper('getcapital', (text) => {
+
+    return text.toUpperCase();
+
+});
+
+
+
 
 // mAIN Page
 app.get('/', (req,res) => {
+Report.find({}, (err,reportt) => {
+  res.render("welcome",{report:reportt});
+});
 
-  res.render("welcome");
 });
 
 //Rendering new template
@@ -164,5 +158,5 @@ app.get('/garbage/get', (req,res) => {
 
 
 app.listen(3000, () => {
-  console.log('Started the Server');
+  console.log('Started the Server 3000');
 });

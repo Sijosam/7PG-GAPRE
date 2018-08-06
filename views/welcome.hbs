@@ -4,5 +4,11 @@
    <h1>Garbage And PotHole Alert </h1>
 
 
+<h4>Reported places</h4>
+{{#each report}}
+<ul>
+  <li>{{getcapital this.place}} --- {{this.type}}</li>
+</ul>
+{{/each }}
 
 {{> footer}}
