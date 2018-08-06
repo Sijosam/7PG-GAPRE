@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser  = require("body-parser");
 const hbs = require('hbs');
 const moment = require('moment');
-
+const geocoder = require('geocoder');
 
 
 var {ObjectID} = require('mongodb');
@@ -18,8 +18,10 @@ app.use(function(req, res, next) {
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.set('view engine', 'hbs');
 
+var mw = require("./middleware/index.js");
 
 
 
@@ -38,11 +40,11 @@ hbs.registerHelper('getdate', (date) => {
 });
 
 
-hbs.registerHelper('getcapital', (text) => {
-
-    return text.toUpperCase();
-
-});
+// hbs.registerHelper('getcapital', (text) => {
+//
+//     return text.toUpperCase();
+//
+// });
 
 
 
@@ -62,9 +64,25 @@ app.get('/new', (req,res) => {
 
 
 //create
-app.post("/report", (req,res) => {
+app.post("/report",mw.geocoded,(req,res) => {
 
-    Report.create(req.body.report, function(err,newreport){
+
+     var report = {
+       location : {
+         lat : req.body.location.location[0].lat,
+         lng : req.body.location.location[0].long,
+       },
+
+       description : req.body.description,
+       type : req.body.type,
+       image : req.body.image.image[0],
+       userID:req.body.userId,
+       place:req.place
+     }
+
+     console.log(report);
+
+    Report.create(report, function(err,newreport){
         if(err)
             {
             res.render("new");
