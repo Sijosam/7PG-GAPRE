@@ -85,11 +85,11 @@ app.post("/report",mw.geocoded,(req,res) => {
     Report.create(report, function(err,newreport){
         if(err)
             {
-            res.render("new");
+            res.status(404).send("Unable to connect");
             }
             else
             {
-            res.render("welcome");
+            res.status(200).send("Reporting has been completed");
             }
     });
 });
