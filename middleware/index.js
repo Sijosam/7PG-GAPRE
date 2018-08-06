@@ -1,4 +1,4 @@
-
+const geocoder = require('geocoder');
 
 module.exports = {
     geocoded: function(req, res, next){
