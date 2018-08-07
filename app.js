@@ -1,8 +1,16 @@
-const express = require('express');
-const bodyParser  = require("body-parser");
-const hbs = require('hbs');
-const moment = require('moment');
-const expressSanitizer = require('express-sanitizer');
+const express               = require('express');
+const bodyParser            = require("body-parser");
+const hbs                   = require('hbs');
+const moment                = require('moment');
+const expressSanitizer      = require('express-sanitizer');
+const passport              = require("passport");
+const LocalStrategy         = require("passport-local");
+const passportLocalMongoose = require("passport-local-mongoose");
+const mw                    =require("./middleware/index.js");
+
+const mongoose              = require('mongoose');
+const Report                = require('./models/report.js');
+const Admin                = require('./models/Admin.js');
 
 
 
@@ -22,13 +30,23 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(expressSanitizer());
 app.set('view engine', 'hbs');
+app.use(require("express-session")({
+    secret: "Keep safe be Safe",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-var mw = require("./middleware/index.js");
+passport.use(new LocalStrategy(Admin.authenticate()));
+passport.serializeUser(Admin.serializeUser());
+passport.deserializeUser(Admin.deserializeUser());
 
 
 
-var mongoose = require('mongoose');
-var Report = require('./models/report.js');
+
+
+
 
 mongoose.Promise = global.Promise;
 
@@ -42,11 +60,58 @@ hbs.registerHelper('getdate', (date) => {
 });
 
 
-// hbs.registerHelper('getcapital', (text) => {
-//
-//     return text.toUpperCase();
-//
-// });
+
+//Admin Login
+
+
+app.get('/adminreg',(req,res) => {
+  res.render('register');
+})
+
+app.get('/adminAll',mw.isLoggedIn,(req,res) => {
+  Report.find({}, (err,reportt) => {
+  res.render("adminAll",{report:reportt});
+});
+})
+
+
+
+app.post('/adminreg',mw.isLoggedIn, (req,res) => {
+  Admin.register(new Admin({username: req.body.username}), req.body.password, (err, user) => {
+      if(err){
+          console.log(err);
+          return res.render('register');
+      }
+      passport.authenticate("local")(req, res, () => {
+        //   Report.find({}, (err,reportt) => {
+          res.redirect("/adminAll");
+        // });
+      });
+  });
+});
+
+
+// LOGIN ROUTES
+//render login form
+app.get("/login", function(req, res){
+   res.render("login");
+});
+//login logic
+//middleware
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/adminAll",
+    failureRedirect: "/login"
+}) ,function(req, res){
+});
+
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/");
+});
+
+
+
+
 
 
 
@@ -114,7 +179,7 @@ app.get('/type/:type', (req,res) => {
 
 //EDIT ROUTE
 
-app.get("/edit/:id", (req,res) => {
+app.get("/edit/:id",mw.isLoggedIn, (req,res) => {
     Report.findById(req.params.id, function(err, found){
        if(err)
             {
@@ -128,7 +193,7 @@ app.get("/edit/:id", (req,res) => {
 });
 
 //update
-app.post("/edit/:id", (req,res) => {
+app.post("/edit/:id",mw.isLoggedIn, (req,res) => {
 
       Report.findByIdAndUpdate(req.params.id,req.body.report, function(err, updatedBlog){
        if(err)
@@ -145,7 +210,7 @@ app.post("/edit/:id", (req,res) => {
 
 
 //Delete PotHoles
-app.post("/del/:type/:id", (req, res) => {
+app.post("/del/:type/:id",mw.isLoggedIn, (req, res) => {
    Report.findByIdAndRemove(req.params.id, function(err){
     var type = req.params.type;
      if(type === 'P'){
@@ -182,6 +247,7 @@ Report.find({"userID": id}, (err,reportt) => {
 });
 
 });
+
 
 
 
