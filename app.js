@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser  = require("body-parser");
 const hbs = require('hbs');
 const moment = require('moment');
+const expressSanitizer = require('express-sanitizer');
 
 
 
@@ -19,6 +20,7 @@ app.use(function(req, res, next) {
 hbs.registerPartials(__dirname + '/views/partials');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(expressSanitizer());
 app.set('view engine', 'hbs');
 
 var mw = require("./middleware/index.js");
@@ -69,15 +71,15 @@ app.post("/report",mw.geocoded,(req,res) => {
 
      var report = {
        location : {
-         lat : req.body.location.location[0].lat,
-         lng : req.body.location.location[0].long,
+         lat : req.sanitize(req.body.location.location[0].lat),
+         lng : req.sanitize(req.body.location.location[0].long),
        },
 
-       description : req.body.description,
-       type : req.body.type,
-       image : req.body.image.image[0],
-       userID:req.body.userId,
-       place:req.place
+       description : req.sanitize(req.body.description),
+       type : req.sanitize(req.body.type),
+       image :req.body.image.image[0],
+       userID:req.sanitize(req.body.userId),
+       place:req.sanitize(req.place)
      }
 
      console.log(report);
@@ -172,6 +174,14 @@ app.get('/garbage/get', (req,res) => {
   });
 });
 
+
+app.get('/user/:id', (req,res) => {
+  var id = req.params.id;
+Report.find({"userID": id}, (err,reportt) => {
+  res.send({report:reportt});
+});
+
+});
 
 
 

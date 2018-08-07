@@ -3,7 +3,8 @@ const geocoder = require('geocoder');
 module.exports = {
     geocoded: function(req, res, next){
        geocoder.reverseGeocode(req.body.location.location[0].lat,req.body.location.location[0].long,( err, data ) => {
-         req.place = data.results[0]. formatted_address;
+
+         req.place = data.results[2].formatted_address;
             next();
           });
         }

@@ -2,11 +2,11 @@ const geocoder = require('geocoder');
 
 
 
-geocoder.reverseGeocode( 33.7489, -84.3789, function ( err, data ) {
+geocoder.reverseGeocode( 10.0164249, 76.3377045, function ( err, data ) {
   if(err){
     console.log(err);
   }else{
-    var t = data.results[0]. formatted_address;
+    var t = data.results[2].formatted_address;
     console.log(t);
   }
 });
