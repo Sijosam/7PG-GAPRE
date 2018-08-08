@@ -166,10 +166,10 @@ app.get('/type/:type', (req,res) => {
   var type = req.params.type;
   Report.find({'type' : type}, (err,Report) => {
     if(type === 'P'){
-        res.render("pothole",{report:Report});
+        res.render("pothole",{report:Report,r:JSON.stringify(Report)});
     }
     else if(type === 'G'){
-      res.render("garbage",{report:Report});
+      res.render("garbage",{report:Report,r:JSON.stringify(Report)});
     }else{
         res.status(404).send("Error");
     }

@@ -4,26 +4,75 @@
    <h1>Garbage Alert Page</h1>
 
 <ul>
-
+  <div id="map" style="height: 200px; width: 60%;" > </div>
 
   {{#each report}}
 
   <li><p>Reported User ID : {{this.userID}} </p></li>
   <p>Reported Date:{{getdate this.date}}</p>
   <p>Place : {{ this.place}}</p>
+
   <img src="{{this.image}}" alt="">
   <p> location in lat & lng : {{this.location.lat}},{{this.location.lng}}</p>
   <p> Description : {{this.description}}</p>
-  <!-- <form action = "/edit/{{ this._id}}" method = "GET">
-  <button>Edit</button>
-  </form>
-  <form action = "/del/{{this.type}}/{{ this._id}}" method = "POST">
-  <button>DELETE</button>
-  </form> -->
   <hr>
-  {{/each}}
 
+
+
+
+
+
+
+  {{/each}}
 </ul>
+
+<script type="text/javascript">
+
+
+
+          function htmlDecode(input) {
+           var e = document.createElement('div');
+           e.innerHTML = input;
+           return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+       }
+      var report = JSON.parse(htmlDecode('{{r}}'));
+     console.log("===",report);
+
+     console.log(report[1].location.lat);
+     console.log(report.length);
+    function initMap() {
+
+
+        var uluru = {lat: 10.0164187, lng:   76.3377454};
+           var map = new google.maps.Map(
+          document.getElementById('map'), {zoom: 12, center: uluru});
+
+
+
+
+    for (var i = 1; i < report.length; i++) {
+
+       console.log("counter", i);
+       var latt = report[i].location.lat;
+       console.log("lat",latt);
+       var long = report[i].location.lng
+       console.log("long",long);
+       console.log("====================")
+
+        marker = new google.maps.Marker({
+        position: {lat : report[i].location.lat , lng : report[i].location.lng},
+        map:map
+
+    });
+
+      //var marker = new google.maps.Marker({position: uluru, map: map});
+    }
+// 10.032233, 76.353861
+// var bounds = new google.maps.LatLngBounds();
+
+
+}
+</script>
 
 
 {{> footer}}
